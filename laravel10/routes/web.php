@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,9 +19,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('add-post', [PostController::class, 'create'])->name('add-post1');
+Route::post('store-post', [PostController::class, 'store'])->name('store-post1');
+Route::get('edit-post/{id}', [PostController::class, 'edit'])->name('edit-post1');
+Route::put('update-post/{id}', [PostController::class, 'update'])->name('update-post1');
+
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

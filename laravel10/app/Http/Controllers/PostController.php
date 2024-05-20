@@ -31,7 +31,6 @@ class PostController extends Controller
 
         Post::create($request->all());
 
-        // return redirect()->back();
         return redirect()->back()->with('status', 'Post added!');
     }
 
@@ -44,10 +43,24 @@ class PostController extends Controller
         ]));
     }
 
-    public function update(Post $post, Request $request)
+    public function update($id, Request $request)
     {
-        return view('edit-new-post', compact([
-            'post'
-        ]));
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'text' => 'required|string',
+        ]);
+
+        $post = Post::findOrFail($id);
+        $post->update($request->all());
+
+        return redirect()->back()->with('status', 'Post updated!');
+    }
+
+    public function delete($id)
+    {
+        $post = Post::findOrFail($id);
+        $post->delete();
+        
+        return redirect()->route('dashboard')->with('status', 'Post Deleted!');
     }
 }

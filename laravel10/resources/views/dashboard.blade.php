@@ -7,17 +7,28 @@
     <div class="container mt-6">
         <div class="row">
             <div class="col-md-12">
-                <a href="{{route('add-post1')}}" type="button" class="btn btn-outline-success mb-4">Add new post</a>
+
+                @if (session('status'))
+                    <div class="alert alert-success mt-4">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <a href="{{ route('add-post1') }}" type="button" class="btn btn-outline-success mb-4">Add new post</a>
 
                 @foreach ($posts as $post)
-                <div class="card mb-4">
-                    <div class="card-header">{{$post->name}}</div>
-                    <div class="card-body">
-                        <p>{{$post->text}}<br>{{$post->created_at}}</p>
-                        <a href="{{route('edit-post1', $post->id)}}" class="btn btn-outline-primary">Edit</a>
-                        <a href="#" class="btn btn-outline-danger">Delete</a>
+                    <div class="card mb-4">
+                        <div class="card-header">{{ $post->name }}</div>
+                        <div class="card-body">
+                            <p>{{ $post->text }}<br>{{ $post->created_at }}</p>
+                            <a href="{{ route('edit-post1', $post->id) }}" class="btn btn-outline-primary">Edit</a>
+                            <form action="{{ route('delete-post1', $post->id) }}" method="POST" style="display: inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
                     </div>
-                </div>
                 @endforeach
 
 

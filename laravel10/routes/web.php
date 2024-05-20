@@ -3,6 +3,7 @@
 use App\Http\Controllers\PostController;
 // use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 // use Spatie\Permission\Models\Role;
 
@@ -23,15 +24,16 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     // Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-    Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard')->middleware('can:show posts');
     
-    Route::get('add-post', [PostController::class, 'create'])->name('add-post1');
-    Route::post('store-post', [PostController::class, 'store'])->name('store-post1');
-    Route::get('edit-post/{id}', [PostController::class, 'edit'])->name('edit-post1');
-    Route::put('update-post/{id}', [PostController::class, 'update'])->name('update-post1');
-    Route::delete('delete-post/{id}', [PostController::class, 'delete'])->name('delete-post1');
+    Route::get('add-post', [PostController::class, 'create'])->name('add-post1')->middleware('can:add posts');
+    Route::post('store-post', [PostController::class, 'store'])->name('store-post1')->middleware('can:add posts');
+    Route::get('edit-post/{id}', [PostController::class, 'edit'])->name('edit-post1')->middleware('can:edit posts');
+    Route::put('update-post/{id}', [PostController::class, 'update'])->name('update-post1')->middleware('can:edit posts');
+    Route::delete('delete-post/{id}', [PostController::class, 'delete'])->name('delete-post1')->middleware('can:delete posts');
     
-    Route::resource('roles', RoleController::class);
+    Route::resource('roles', RoleController::class)->middleware('role:super-user');
+    Route::resource('users', UserController::class)->middleware('role:super-user');
 });
 
 // Route::middleware('auth')->group(function () {
